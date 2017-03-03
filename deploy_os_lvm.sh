@@ -86,8 +86,8 @@ mv /mnt/etc/resolv.conf /mnt/etc/resolv.conf_
 echo nameserver 8.8.8.8 >> /mnt/etc/resolv.conf
 DEBIAN_FRONTEND=noninteractive chroot /mnt apt-get install -y grub2 linux-virtual
 chroot /mnt grub-install ${DEV}
-# Fix unattended upgrades hang on shutdown
-ln -s /dev/null /mnt/etc/systemd/system/unattended-upgrades.service
+# Fix unattended upgrades hang on shutdown (see https://bugs.launchpad.net/bugs/1654600)
+sed -i "s#ExecStart=#RemainAfterExit=yes\nExecStop=#;" /mnt/lib/systemd/system/unattended-upgrades.service
 if lsmod | grep -q r816*; then
   # Build DKMS r8169 ethernet module for Hetzner
   chroot /mnt apt-get install -y r8168-dkms
