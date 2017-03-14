@@ -14,6 +14,7 @@ done
 
 cat <<EOF > ${DESTDIR}/bin/boot
 #!/bin/sh
+touch /tmp/noautoboot
 kill -9 \$(ps | grep '[s]h -i' | awk '{print \$1}')
 EOF
 chmod +x ${DESTDIR}/bin/boot
