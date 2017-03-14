@@ -27,7 +27,7 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y busybox-static dropbear lvm2 qemu-utils curl mdadm
+apt-get install -y busybox-static dropbear lvm2 qemu-utils curl mdadm screen
 
 # Set "break" to stop boot at initramfs, disable "predictable" eth dev names, set static IP address when necessary
 # "console" order makes sense which console will be activated. Last defined console will be used. In this case VGA will be used

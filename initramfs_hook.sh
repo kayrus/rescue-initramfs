@@ -22,6 +22,7 @@ copy_exec "/sbin/fdisk" "/bin/"
 copy_exec "/usr/bin/qemu-img" "/bin/"
 copy_exec "/usr/bin/curl" "/bin/"
 copy_exec "/usr/bin/scp" "/bin/"
+copy_exec "/usr/bin/screen" "/bin/"
 
 # Copy mkfs
 copy_exec "/sbin/mke2fs" "/sbin/"
@@ -32,6 +33,10 @@ ln -s mke2fs "${DESTDIR}/sbin/mkfs.ext2"
 cp -a /etc/ssl ${DESTDIR}/etc/ssl
 mkdir -p ${DESTDIR}/usr/share/
 cp -a /usr/share/ca-certificates ${DESTDIR}/usr/share/
+# Copy xterm info for screen
+mkdir -p ${DESTDIR}/lib/terminfo
+cp -a /lib/terminfo/x ${DESTDIR}/lib/terminfo
+install -d -m 755 ${DESTDIR}/var/run/screen
 # Fix DNS resolver
 cp -a /lib/x86_64-linux-gnu/libnss_dns* ${DESTDIR}/lib/x86_64-linux-gnu/
 echo "nameserver 8.8.8.8" > ${DESTDIR}/etc/resolv.conf
