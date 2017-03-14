@@ -31,7 +31,8 @@ apt-get install -y busybox-static dropbear lvm2 qemu-utils curl mdadm screen
 
 # Set "break" to stop boot at initramfs, disable "predictable" eth dev names, set static IP address when necessary
 # "console" order makes sense which console will be activated. Last defined console will be used. In this case VGA will be used
-echo "GRUB_CMDLINE_LINUX_DEFAULT=\"break=mount console=ttyS0 console=tty1 net.ifnames=0 biosdevname=0 ${STATIC_IP}\"" > /etc/default/grub.d/99-break-mount.cfg
+echo "GRUB_CMDLINE_LINUX_DEFAULT=\"break=mount console=ttyS0 console=tty1 ${STATIC_IP}\"" > /etc/default/grub.d/99-break-mount.cfg
+echo 'GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"' > /etc/default/grub.d/98-legacy-ifnames.cfg
 update-grub
 install -d -m 700 /etc/initramfs-tools/root/.ssh/
 if [ "${SUDO_USER}" != "" ]; then

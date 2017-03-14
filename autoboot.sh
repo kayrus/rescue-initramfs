@@ -32,4 +32,15 @@ run_autoboot_timeout() {
   /bin/boot
 }
 
-run_autoboot_timeout &
+for arg in $(cat /proc/cmdline); do
+  case "$arg" in
+  break=mount)
+    run_autoboot_timeout &
+    ;;
+  --)
+    break
+    ;;
+  *)
+    ;;
+  esac
+done
