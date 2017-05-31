@@ -1,6 +1,8 @@
 Fully functional rescue initramfs for Debian based OS. **Experimental!**
 I'd recommend you to test these scripts on VM first, i.e. using https://github.com/kayrus/deploy-vm
 
+**Please note the the whole boot disk will be wiped!**
+
 # Run
 
 * Copy scripts into destination VM
@@ -12,20 +14,32 @@ I'd recommend you to test these scripts on VM first, i.e. using https://github.c
 
 * Run `deploy_os.sh` to install the VMWare Ubuntu Xenial image into the `/dev/?da` block device
 * Reboot the VM to boot the new OS: `echo b > /proc/sysrq-trigger`
+* After the reboot you have to use `ubuntu` ssh user with your private key.
+
+## Custom install
+
+If you wish to install Ubuntu Trusty with LVM, please run the command below:
+
+```sh
+deploy_os_lvm.sh /dev/sda trusty
+```
+
+After the reboot you have to use `ubuntu` ssh user with your private key.
 
 ## LVM install
 
 * Run `deploy_os_lvm.sh` to install the Ubuntu Xenial bootstrap files into the `/dev/?da` block device with LVM layout
+* After the reboot you have to use `ubuntu` ssh user with your private key.
 
 ## RedHat based systems support
 
 This script doesn't support RedHat based OS. In case when you would like to boot into rescue-initramfs from RadHat OS you have to use some tricks:
 
-* Comment out the `run_autoboot_timeout &` string in the `autoboot.sh` script, it doesn't make sense in this scenario.
-* Generate initramfs image on some test VM (which runs `linux-image-virtual` image).
+* Generate (run `sudo ./run_in_os.sh`) initramfs image on some test VM (which runs `linux-image-virtual` image).
 * Rename the original `initramfs-*.img` and `vmlinuz-*` to `*_bak` inside the target's `/boot` directory. In case when there are several initramfs files, try to find one which corresponds to `vmlinuz-*` postfix.
 * Copy generated `initrd*` along with the `vmlinuz-*` into the target's `/boot` directory using the names which were used by the original files.
-* Make a backup of the original grub config. Modify grub config and append proper `ip=` along with the `break=mount` at the end of all strings which start with the `linux`.
+* Make a backup of the original grub config. Modify grub config and append proper `ip=` along with the `break=mount net.ifnames=0 biosdevname=0 console=ttyS0 console=tty1` at the end of all strings which start with the `linux`.
+* From grub config remove stuff like: `rd_LVM_LV=vglocal20140422/root00 rd_LVM_LV=vglocal20140422/swap00 rd_NO_LUKS pci=bfsort LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet`
 * Verify IP address, path's to kernel and initrd.
 * Reboot and pray that VM with rescue-initramf will boot.
 
@@ -35,7 +49,6 @@ If you don't want to install Ubuntu image, but just modify/resize filesystems an
 
 * Implement support for several `authorized_keys` entries
 * Implement mdadm support
-* Test with full LUKS encryption
 
 # In case of problems
 
@@ -68,3 +81,7 @@ Dropbear in Ubuntu Trusty doesn't support ECDSA, but OpenSSH supports it. Thus y
 Inspired by:
 
 * https://blog.tincho.org/posts/Setting_up_my_server:_re-installing_on_an_encripted_LVM/
+
+# TODO
+
+* Make sure there is no VG with the same name

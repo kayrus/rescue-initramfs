@@ -25,6 +25,9 @@ copy_exec "/usr/bin/curl" "/bin/"
 copy_exec "/usr/bin/scp" "/bin/"
 copy_exec "/usr/bin/screen" "/bin/"
 copy_exec "/usr/bin/rsync" "/bin/"
+copy_exec "/usr/bin/lsof" "/bin/"
+# Copy non-busybox/full tar
+copy_exec "/bin/tar" "/sbin/"
 
 # Copy mkfs
 copy_exec "/sbin/mke2fs" "/sbin/"

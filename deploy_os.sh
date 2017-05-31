@@ -75,11 +75,16 @@ mount ${DEV}1 /mnt
 mkdir -p /mnt/var/lib/cloud/seed/nocloud
 cat > /mnt/var/lib/cloud/seed/nocloud/user-data <<EOF
 #cloud-config
-apt_upgrade: true
+package_upgrade: true
 hostname: ${HOST}
 chpasswd: { expire: False }
 ssh_pwauth: True
 password: ${PASSWORD}
+packages:
+  - htop
+  - screen
+  - mc
+  - iftop
 users:
   - default:
     ssh-authorized-keys:
