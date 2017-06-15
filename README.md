@@ -36,12 +36,14 @@ After the reboot you have to use `ubuntu` ssh user with your private key.
 This script doesn't support RedHat based OS. In case when you would like to boot into rescue-initramfs from RadHat OS you have to use some tricks:
 
 * Generate (run `sudo ./run_in_os.sh`) initramfs image on some test VM (which runs `linux-image-virtual` image).
-* Rename the original `initramfs-*.img` and `vmlinuz-*` to `*_bak` inside the target's `/boot` directory. In case when there are several initramfs files, try to find one which corresponds to `vmlinuz-*` postfix.
+* On the target host rename the original `/boot/initramfs-*.img` and `/boot/vmlinuz-*` to `*_bak`. In case when there are several initramfs files, try to find one which corresponds to the first GRUB menu entry inside the `/boot/grub/grub.conf` file.
 * Copy generated `initrd*` along with the `vmlinuz-*` into the target's `/boot` directory using the names which were used by the original files.
-* Make a backup of the original grub config. Modify grub config and append proper `ip=` along with the `break=mount net.ifnames=0 biosdevname=0 console=ttyS0 console=tty1` at the end of all strings which start with the `linux`.
+* Make a backup of the original grub config (`/boot/grub/grub.conf`). Modify grub config and append proper `ip=${IP}::${GATEWAY}:${NETWORK}:${HOSTHAME}:eth0:off` along with the `break=mount net.ifnames=0 biosdevname=0 console=ttyS0 console=tty1` at the end of all strings which start with the `kernel`.
 * From grub config remove stuff like: `rd_LVM_LV=vglocal20140422/root00 rd_LVM_LV=vglocal20140422/swap00 rd_NO_LUKS pci=bfsort LANG=en_US.UTF-8 rd_NO_MD SYSFONT=latarcyrheb-sun16 crashkernel=auto  KEYBOARDTYPE=pc KEYTABLE=us rd_NO_DM rhgb quiet`
 * Verify IP address, path's to kernel and initrd.
+* Run the ping command to monitor the server availability status.
 * Reboot and pray that VM with rescue-initramf will boot.
+* You have 60 seconds from the beginning to log in into the rescue console, so please prepare the `ssh root@%IP%` command in the different terminal window.
 
 If you don't want to install Ubuntu image, but just modify/resize filesystems and then reboot, you have to restore original initrd and linux image along with the grub config before the reboot.
 
